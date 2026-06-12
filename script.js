@@ -55,6 +55,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const inputs = document.querySelectorAll(".match input");
 
+    const datosGuardados = JSON.parse(localStorage.getItem("fixtureMundial"));
+
+if (datosGuardados) {
+    inputs.forEach((input, index) => {
+        if (datosGuardados[index] !== undefined) {
+            input.value = datosGuardados[index];
+        }
+    });
+}
+
     inputs.forEach((input, index) => {
 
         input.addEventListener("input", actualizarFixture);
@@ -107,6 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
     actualizarFixture();
 
     function actualizarFixture() {
+
+        const datos = [];
+
+document.querySelectorAll(".match input").forEach(input => {
+    datos.push(input.value);
+});
+
+localStorage.setItem("fixtureMundial", JSON.stringify(datos));
 
         document.querySelectorAll(".group-wrapped").forEach(grupo => {
 
