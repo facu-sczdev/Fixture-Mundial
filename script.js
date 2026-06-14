@@ -50,11 +50,11 @@ document.addEventListener("DOMContentLoaded", () => {
         arg: "Argentina",
         aut: "Austria",
         jor: "Jordania",
-        alg: "Argelia",
+        alg: "Algeria",
 
         por:"Portugal",
         col: "Colombia",
-        uzb: "Uzbekistan",
+        uzb: "Uzbekistán",
         rdc: "RP del Congo",
 
         ing: "Inglaterra",
