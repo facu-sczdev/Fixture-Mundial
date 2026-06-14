@@ -198,10 +198,16 @@ localStorage.setItem("fixtureMundial", JSON.stringify(datos));
                     tabla[local].puntos += 1;
                     tabla[visitante].puntos += 1;
                 }
+                                console.log(local, visitante);
+
             });
+
+                        console.log("Grupo:", grupo.querySelector(".group").textContent);
+
 
             const ranking = Object.values(tabla); /* Obtiene un array con todos los equipos y sus estadísticas */
 
+            
             ranking.sort((a, b) => { /* Ordena los equipos por puntos, diferencia de goles y goles a favor */
 
                 if (b.puntos !== a.puntos) /* Si los puntos son diferentes, ordena por puntos */
