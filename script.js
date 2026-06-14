@@ -50,16 +50,26 @@ document.addEventListener("DOMContentLoaded", () => {
         arg: "Argentina",
         aut: "Austria",
         jor: "Jordania",
-        alg: "Argelia"
+        alg: "Argelia",
+
+        por:"Portugal",
+        col: "Colombia",
+        uzb: "Uzbekistan",
+        rdc: "RP del Congo",
+
+        ing: "Inglaterra",
+        cro: "Croacia",
+        gha: "Ghana",
+        pan: "Panamá"
     };
 
-    const inputs = document.querySelectorAll(".match input");
+    const inputs = document.querySelectorAll(".match input"); /* Guarda los inputs */
 
-    const datosGuardados = JSON.parse(localStorage.getItem("fixtureMundial"));
+    const datosGuardados = JSON.parse(localStorage.getItem("fixtureMundial")); /* Guarda datos al cerrar la página */
 
 if (datosGuardados) {
     inputs.forEach((input, index) => {
-        if (datosGuardados[index] !== undefined) {
+        if (datosGuardados[index] !== undefined) {   /* Rellena los inputs con los datos guardados */
             input.value = datosGuardados[index];
         }
     });
@@ -67,23 +77,23 @@ if (datosGuardados) {
 
     inputs.forEach((input, index) => {
 
-        input.addEventListener("input", actualizarFixture);
+        input.addEventListener("input", actualizarFixture);  /* Actualiza el fixture cuando se escribe en un input */
 
-        input.addEventListener("keydown", (e) => {
+        input.addEventListener("keydown", (e) => {  
 
             if (e.key === "Enter" || e.key === "ArrowRight") {
 
-                e.preventDefault();
+                e.preventDefault(); /* Evita el comportamiento por defecto */
 
-                if (inputs[index + 1]) {
-                    inputs[index + 1].focus();
-                    inputs[index + 1].select();
+                if (inputs[index + 1]) {        /* Si existe un input siguiente */
+                    inputs[index + 1].focus(); /* Enfoca el siguiente input */
+                    inputs[index + 1].select(); /* Selecciona el contenido del siguiente input */
                 }
             }
 
-            if (e.key === "ArrowLeft") {
+            if (e.key === "ArrowLeft") {  
 
-                e.preventDefault();
+                e.preventDefault(); 
 
                 if (inputs[index - 1]) {
                     inputs[index - 1].focus();
@@ -126,32 +136,32 @@ document.querySelectorAll(".match input").forEach(input => {
 
 localStorage.setItem("fixtureMundial", JSON.stringify(datos));
 
-        document.querySelectorAll(".group-wrapped").forEach(grupo => {
+        document.querySelectorAll(".group-wrapped").forEach(grupo => { /* Recorre todos los grupos */
 
             const tabla = {};
 
-            grupo.querySelectorAll(".clasf-teams").forEach(equipo => {
+            grupo.querySelectorAll(".clasf-teams").forEach(equipo => { /* Recorre todos los equipos de un grupo */
 
-                const nombre = equipo.querySelector(".team-name").textContent.trim();
+                const nombre = equipo.querySelector(".team-name").textContent.trim(); /* Obtiene el nombre del equipo */
 
                 tabla[nombre] = {
                     nombre,
-                    puntos: 0,
+                    puntos: 0,           
                     pj: 0,
                     dg: 0,
                     gf: 0,
-                    elemento: equipo
+                    elemento: equipo  
                 };
             });
 
             grupo.querySelectorAll(".match").forEach(partido => {
 
-                const localTag = partido.querySelector(".team-1");
-                const visitanteTag = partido.querySelector(".team-2");
+                const localTag = partido.querySelector(".team-1"); /* Obtiene la etiqueta del equipo local */
+                const visitanteTag = partido.querySelector(".team-2"); /* Obtiene la etiqueta del equipo visitante */
 
-                if (!localTag || !visitanteTag) return;
+                if (!localTag || !visitanteTag) return; /* Si no existen las etiquetas, se omite el partido */
 
-                const local = abreviaturas[localTag.textContent.trim()];
+                const local = abreviaturas[localTag.textContent.trim()]; /* Obtiene la abreviatura del equipo local */
                 const visitante = abreviaturas[visitanteTag.textContent.trim()];
 
                 if (!tabla[local] || !tabla[visitante]) return;
@@ -163,16 +173,16 @@ localStorage.setItem("fixtureMundial", JSON.stringify(datos));
 
                 if (golLocal === "" || golVisitante === "") return;
 
-                const gl = Number(golLocal);
+                const gl = Number(golLocal); /* Convierte el valor del gol local a número */
                 const gv = Number(golVisitante);
 
-                tabla[local].pj++;
+                tabla[local].pj++; /* Incrementa el número de partidos jugados del equipo local */
                 tabla[visitante].pj++;
 
                 tabla[local].gf += gl;
                 tabla[visitante].gf += gv;
 
-                tabla[local].dg += gl - gv;
+                tabla[local].dg += gl - gv; /* Incrementa la diferencia de goles del equipo local */
                 tabla[visitante].dg += gv - gl;
 
                 if (gl > gv) {
@@ -190,31 +200,31 @@ localStorage.setItem("fixtureMundial", JSON.stringify(datos));
                 }
             });
 
-            const ranking = Object.values(tabla);
+            const ranking = Object.values(tabla); /* Obtiene un array con todos los equipos y sus estadísticas */
 
-            ranking.sort((a, b) => {
+            ranking.sort((a, b) => { /* Ordena los equipos por puntos, diferencia de goles y goles a favor */
 
-                if (b.puntos !== a.puntos)
-                    return b.puntos - a.puntos;
+                if (b.puntos !== a.puntos) /* Si los puntos son diferentes, ordena por puntos */
+                    return b.puntos - a.puntos; /* devuelve la diferencia de puntos */
 
-                if (b.dg !== a.dg)
+                if (b.dg !== a.dg) /* Si la diferencia de goles es diferente, ordena por diferencia de goles */
                     return b.dg - a.dg;
 
                 return b.gf - a.gf;
             });
 
-            const contenedor = grupo.querySelector(".clasf-group");
+            const contenedor = grupo.querySelector(".clasf-group"); /* Obtiene el contenedor del grupo de clasificación */
 
-            ranking.forEach((equipo, posicion) => {
+            ranking.forEach((equipo, posicion) => { /* Recorre el array de equipos ordenados */
 
-                equipo.elemento.classList.remove(
+                equipo.elemento.classList.remove( /* Elimina las clases de estado del equipo */
                     "clasificado",
                     "repechaje",
                     "eliminado"
                 );
 
                 if (posicion <= 1) {
-                    equipo.elemento.classList.add("clasificado");
+                    equipo.elemento.classList.add("clasificado"); 
                 }
                 else if (posicion === 2) {
                     equipo.elemento.classList.add("repechaje");
@@ -223,7 +233,7 @@ localStorage.setItem("fixtureMundial", JSON.stringify(datos));
                     equipo.elemento.classList.add("eliminado");
                 }
 
-                equipo.elemento.querySelector(".position").textContent =
+                equipo.elemento.querySelector(".position").textContent = /* Actualiza la posición del equipo */
                     posicion + 1;
 
                 equipo.elemento.querySelector(".points").textContent =
